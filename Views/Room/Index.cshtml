@@ -1,0 +1,88 @@
+@model IEnumerable<HotelManagementSystem.Models.Room>
+@{
+    ViewData["Title"] = "Rooms";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Available Rooms</h2>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" asp-action="Index">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Room Type</label>
+                        <select name="type" class="form-select">
+                            <option value="">All Types</option>
+                            @foreach (var type in ViewBag.Types as List<string> ?? new List<string>())
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Min Price</label>
+                        <input type="number" name="minPrice" class="form-control" placeholder="Min Price" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Max Price</label>
+                        <input type="number" name="maxPrice" class="form-control" placeholder="Max Price" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="">All Status</option>
+                            @foreach (var status in ViewBag.Statuses as List<string> ?? new List<string>())
+                            {
+                                <option value="@status">@status</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a asp-action="Index" class="btn btn-secondary">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var room in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-img-top bg-secondary text-white text-center p-5" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-door-open" style="font-size: 4rem;"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Room @room.RoomNo</h5>
+                        <p class="card-text">
+                            <strong>Type:</strong> @room.Type<br>
+                            <strong>Price:</strong> ₹@room.Price per night<br>
+                            <strong>Status:</strong> 
+                            @if (room.Status == "Available")
+                            {
+                                <span class="badge bg-success">@room.Status</span>
+                            }
+                            else if (room.Status == "Booked")
+                            {
+                                <span class="badge bg-danger">@room.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">@room.Status</span>
+                            }
+                        </p>
+                        @if (!string.IsNullOrEmpty(room.Description))
+                        {
+                            <p class="card-text"><small class="text-muted">@room.Description</small></p>
+                        }
+                        <a asp-action="Details" asp-route-id="@room.Id" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

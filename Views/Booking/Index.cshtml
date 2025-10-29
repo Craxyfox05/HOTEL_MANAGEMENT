@@ -1,0 +1,69 @@
+@model IEnumerable<HotelManagementSystem.Models.Booking>
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">My Bookings</h2>
+    
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <p>You have no bookings yet. <a asp-controller="Room" asp-action="Index">Browse rooms</a> to make a booking.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Room</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Total Amount</th>
+                        <th>Payment Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in Model)
+                    {
+                        <tr>
+                            <td>@booking.Id</td>
+                            <td>@booking.Room.RoomNo (@booking.Room.Type)</td>
+                            <td>@booking.CheckIn.ToString("dd/MM/yyyy")</td>
+                            <td>@booking.CheckOut.ToString("dd/MM/yyyy")</td>
+                            <td>₹@booking.TotalAmount.ToString("N2")</td>
+                            <td>
+                                @if (booking.PaymentStatus == "Completed")
+                                {
+                                    <span class="badge bg-success">@booking.PaymentStatus</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning">@booking.PaymentStatus</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@booking.Id" class="btn btn-sm btn-info">View</a>
+                                @if (booking.PaymentStatus == "Pending")
+                                {
+                                    <a asp-action="Payment" asp-route-bookingId="@booking.Id" class="btn btn-sm btn-primary">Pay Now</a>
+                                }
+                                @if (booking.PaymentStatus == "Completed" && booking.CheckIn > DateTime.Today.AddDays(1))
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@booking.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?')">Cancel</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+

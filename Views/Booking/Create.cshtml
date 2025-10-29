@@ -1,0 +1,50 @@
+@model HotelManagementSystem.Models.Room
+@{
+    ViewData["Title"] = "Book Room";
+    var room = ViewBag.Room as HotelManagementSystem.Models.Room;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Book Room @room.RoomNo</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <p><strong>Type:</strong> @room.Type</p>
+                        <p><strong>Price:</strong> ₹@room.Price per night</p>
+                    </div>
+                    <form asp-action="Create" method="post">
+                        <input type="hidden" name="roomId" value="@room.Id" />
+                        <div class="mb-3">
+                            <label for="checkIn" class="form-label">Check-in Date</label>
+                            <input type="date" name="checkIn" id="checkIn" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="checkOut" class="form-label">Check-out Date</label>
+                            <input type="date" name="checkOut" id="checkOut" class="form-control" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="mb-3">
+                            <p class="text-muted">Total amount will be calculated based on selected dates.</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Continue to Payment</button>
+                        <a asp-controller="Room" asp-action="Details" asp-route-id="@room.Id" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('checkIn').addEventListener('change', function() {
+            var checkIn = new Date(this.value);
+            var checkOutInput = document.getElementById('checkOut');
+            checkOutInput.min = new Date(checkIn.getTime() + 86400000).toISOString().split('T')[0];
+        });
+    </script>
+}
+

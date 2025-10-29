@@ -1,0 +1,124 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">Dashboard</h2>
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Rooms</h5>
+                    <h2>@ViewBag.TotalRooms</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Available Rooms</h5>
+                    <h2>@ViewBag.AvailableRooms</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Booked Rooms</h5>
+                    <h2>@ViewBag.BookedRooms</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Revenue</h5>
+                    <h2>₹@ViewBag.TotalRevenue.ToString("N2")</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Bookings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Customer</th>
+                                    <th>Room</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var booking in ViewBag.RecentBookings as List<HotelManagementSystem.Models.Booking> ?? new List<HotelManagementSystem.Models.Booking>())
+                                {
+                                    <tr>
+                                        <td>@booking.Id</td>
+                                        <td>@booking.User.Name</td>
+                                        <td>@booking.Room.RoomNo</td>
+                                        <td>@booking.CheckIn.ToString("dd/MM/yyyy")</td>
+                                        <td>@booking.CheckOut.ToString("dd/MM/yyyy")</td>
+                                        <td>₹@booking.TotalAmount.ToString("N2")</td>
+                                        <td>
+                                            @if (booking.PaymentStatus == "Completed")
+                                            {
+                                                <span class="badge bg-success">@booking.PaymentStatus</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning">@booking.PaymentStatus</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var monthlyData = @Html.Raw(Json.Serialize(ViewBag.MonthlyBookings));
+        var ctx = document.getElementById('bookingChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyData.map(d => new Date(2024, d.month - 1).toLocaleString('default', { month: 'long' })),
+                    datasets: [{
+                        label: 'Bookings',
+                        data: monthlyData.map(d => d.count),
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}
+

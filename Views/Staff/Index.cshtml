@@ -1,0 +1,44 @@
+@model IEnumerable<HotelManagementSystem.Models.Staff>
+@{
+    ViewData["Title"] = "Manage Staff";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Manage Staff</h2>
+        <a asp-action="Create" class="btn btn-primary">Add New Staff</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Contact</th>
+                    <th>Shift Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var staff in Model)
+                {
+                    <tr>
+                        <td>@staff.Name</td>
+                        <td>@staff.Role</td>
+                        <td>@staff.Contact</td>
+                        <td>@staff.ShiftTime</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@staff.Id" class="btn btn-sm btn-primary">Edit</a>
+                            <form asp-action="Delete" asp-route-id="@staff.Id" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this staff member?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

@@ -1,0 +1,64 @@
+@model HotelManagementSystem.Models.Booking
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Booking Details</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Booking ID:</strong> @Model.Id</p>
+                            <p><strong>Booking Date:</strong> @Model.BookingDate.ToString("dd/MM/yyyy HH:mm")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Payment Status:</strong> 
+                                @if (Model.PaymentStatus == "Completed")
+                                {
+                                    <span class="badge bg-success">@Model.PaymentStatus</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning">@Model.PaymentStatus</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <h5>Room Information</h5>
+                    <p><strong>Room No:</strong> @Model.Room.RoomNo</p>
+                    <p><strong>Type:</strong> @Model.Room.Type</p>
+                    <p><strong>Price per night:</strong> ₹@Model.Room.Price.ToString("N2")</p>
+                    <hr>
+                    <h5>Booking Dates</h5>
+                    <p><strong>Check-in:</strong> @Model.CheckIn.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Check-out:</strong> @Model.CheckOut.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Duration:</strong> @((Model.CheckOut - Model.CheckIn).Days) nights</p>
+                    <hr>
+                    <h5>Payment Information</h5>
+                    @if (Model.Payment != null)
+                    {
+                        <p><strong>Payment Method:</strong> @Model.Payment.Method</p>
+                        <p><strong>Amount Paid:</strong> ₹@Model.Payment.Amount.ToString("N2")</p>
+                        <p><strong>Payment Date:</strong> @Model.Payment.Date.ToString("dd/MM/yyyy HH:mm")</p>
+                    }
+                    <hr>
+                    <h4 class="text-end"><strong>Total Amount: ₹@Model.TotalAmount.ToString("N2")</strong></h4>
+                    <div class="mt-4">
+                        @if (Model.PaymentStatus == "Completed")
+                        {
+                            <a asp-controller="Invoice" asp-action="Generate" asp-route-bookingId="@Model.Id" class="btn btn-primary">Download Invoice</a>
+                        }
+                        <a asp-action="Index" class="btn btn-secondary">Back to Bookings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,49 @@
+@model HotelManagementSystem.Models.Room
+@{
+    ViewData["Title"] = "Room Details";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="bg-secondary text-white text-center p-5 rounded" style="min-height: 400px; display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-door-open" style="font-size: 8rem;"></i>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2>Room @Model.RoomNo</h2>
+            <hr>
+            <p><strong>Type:</strong> @Model.Type</p>
+            <p><strong>Price:</strong> ₹@Model.Price per night</p>
+            <p><strong>Status:</strong> 
+                @if (Model.Status == "Available")
+                {
+                    <span class="badge bg-success">@Model.Status</span>
+                }
+                else if (Model.Status == "Booked")
+                {
+                    <span class="badge bg-danger">@Model.Status</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning">@Model.Status</span>
+                }
+            </p>
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <p><strong>Description:</strong> @Model.Description</p>
+            }
+            <hr>
+            @if (User.Identity!.IsAuthenticated && Model.Status == "Available")
+            {
+                <a asp-controller="Booking" asp-action="Create" asp-route-roomId="@Model.Id" class="btn btn-primary btn-lg">Book Now</a>
+            }
+            else if (!User.Identity!.IsAuthenticated)
+            {
+                <p class="text-muted">Please <a asp-controller="Account" asp-action="Login">login</a> to book this room.</p>
+            }
+            <a asp-action="Index" class="btn btn-secondary">Back to Rooms</a>
+        </div>
+    </div>
+</div>
+

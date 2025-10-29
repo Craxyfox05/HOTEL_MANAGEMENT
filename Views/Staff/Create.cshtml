@@ -1,0 +1,44 @@
+@model HotelManagementSystem.Models.Staff
+@{
+    ViewData["Title"] = "Create Staff";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">Add New Staff Member</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Name</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Role" class="form-label">Role</label>
+                    <input asp-for="Role" class="form-control" />
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Contact" class="form-label">Contact</label>
+                    <input asp-for="Contact" class="form-control" />
+                    <span asp-validation-for="Contact" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ShiftTime" class="form-label">Shift Time</label>
+                    <input asp-for="ShiftTime" class="form-control" placeholder="e.g., 9:00 AM - 5:00 PM" />
+                    <span asp-validation-for="ShiftTime" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Staff</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
